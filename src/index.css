@@ -1,3 +1,7 @@
+*{
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,8 +10,145 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.container{
+  width: 90%;
+  margin: 0 auto;
+}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+header{
+  background-color: black;
+  color: white;
+  text-shadow: 2px 2px 2px purple;
+  padding: 20px 0;
+  text-align: center;
+
+}
+header .container{
+  text-align: center;
+}
+
+.box1{
+  display: none;
+}
+.product{
+  width: 90%;
+  margin: 40px auto;
+  padding: 10px 0;
+  border-radius: 20px;
+  box-shadow: 2px 2px 2px #382f2f, -2px -2px 2px #382f2f;
+}
+a{
+  text-decoration: none;
+}
+p,h3{
+  margin: 0;
+  padding: 0;
+}
+
+.product img{
+  width: 100%;
+  border-bottom: 2px solid #777777;
+  padding-bottom: 10px;
+}
+input{
+  border-radius: 5px;
+  padding: 2px;
+  margin: 10px auto;
+  display: block;
+  border: 2px solid black;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+}
+input:focus{
+  color: black;
+  background-color: rgba(119, 119, 119,0.2);
+  color: #ffffff;
+}
+input:focus input::placeholder{
+  color: #ffffff;
+}
+button{
+  width: 70%;
+  margin: 3px auto;
+  display: block;
+  border: none;
+  padding: 2px;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: purple;
+  color: #ffffff;
+}
+button:hover{
+  background-color: rgb(68, 4, 68);
+}
+
+.card{
+  color: #000000;
+  padding: 10px;
+}
+
+.singleproduct{
+  background-color: yellow;
+  background-color: rgba(119, 119, 119,0.5);
+}
+
+.minmax_input{
+  background-color: black;
+  padding: 2px;
+}
+
+@media (min-width: 670px) {
+
+  .search_wrapper{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .box1{
+    display: block;
+    width: 50%;
+   
+  }
+  .phoneimg{
+    width: 100%;
+  }
+
+  .search{
+    width: 40%;
+  }
+  .products{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .product{
+    width: 30%;
+  }
+  input{
+    padding: 5px;
+    margin: 10px auto;
+    font-size: 24px;
+    height: 60px;
+  }
+
+  button{
+    width: 70%;
+    margin: 10px auto;
+    display: block;
+    border: none;
+    padding: 8px;
+    font-size: 20px;
+    
+  }
+
+
+}
+
+@media (min-width: 1200px) {
+  .product{
+    width: 23%;
+    margin-left: 0px;
+  }
 }
