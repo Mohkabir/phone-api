@@ -5,7 +5,6 @@ import noimage from "../asset/noimage.jpg"
 const Product = ({product}) => {
 
   const viewDetails = () => {
-    console.log("single product", product);
     localStorage.setItem("phonedetails", JSON.stringify(product))
   }
 

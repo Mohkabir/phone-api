@@ -12,6 +12,7 @@ const Search = (props) => {
       placeholder="search phone"
       onChange={(value) => handleChange("search", value)}
       value={props.search.property}
+      className="input"
       />
 
       <div className="minmax_input">

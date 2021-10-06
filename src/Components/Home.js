@@ -2,88 +2,71 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Products from './Products';
 import Search from './Search';
-import phoneimg from "../asset/phonestore.jpg"
+import phoneimg from "../asset/phonestore.jpg";
+import Fuse from "fuse.js";
 
 const Home = () => {
 
-
-  const api = "https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=40&page=1&minPrice=50&maxPrice=&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung.";
+  const api = "https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=40&page=1&minPrice=50&maxPrice=&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus.";
 
   const [url, setUrl] = useState(api)
-
   const [loading, setloading] = useState(false)
+  const [products, setProducts] = useState();
+  const [productCopy, setProductCopy] = useState();
 
-  // "https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=20&page=1&minPrice=0&maxPrice=2500&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus."
+  const [search, setSearch] = useState({
+    property:"",
+    min:0,
+    max:0
+  });
 
 
-// const [products, setProducts] = useState(JSON.parse(localStorage.getItem("phones")));
+  const handleChange = (key, value) => {
 
-const [products, setProducts] = useState();
+    setSearch(value);
 
-
-const [search, setSearch] = useState({
-  property:"",
-  min:0,
-  max:0
-});
-
-const handleChange = (key, value) => {
-  setSearch(value);
-  console.log(value);
-
-  if(key === "search"){
-    setSearch({...search, property: value});
-
-    const conditionstring = search.property.split(",").join(","); 
-    setUrl(`https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=20&page=1&minPrice=&maxPrice=&storageSizeString=&conditionString=${conditionstring}&category=Smartphones&brand=Apple,Samsung.`)
-
-  }else if(key === "min"){
-    setSearch({...search, min: value});
-  }else if(key === "max"){
-    setSearch({...search, max: value});
+    if(key === "search"){
+      setSearch({...search, property: value});
+      searchProducts(value);
+    }else if(key === "min"){
+      setSearch({...search, min: value});
+    }else if(key === "max"){
+      setSearch({...search, max: value});
+    }
   }
-  console.log("state log", search)
 
-  const singleSearch = search.property.split(",");
-  const storageSize =singleSearch? singleSearch.join(","):"";
+  const handleMaxMinSubmit = () => {
+    setUrl(`https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=20&page=1&minPrice=${search.min}&maxPrice=${search.max}&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus.`)
+  }
 
-}
+  useEffect(()=>{
+    setloading(true);
+    axios.get(url)
+    .then((res)=> {
+      setProducts(res.data.data.data)
+      setProductCopy(res.data.data.data)
+      setloading(false);
+    }).catch(err => console.log("fetch error log", err));
 
-const handleMaxMinSubmit = () => {
-  setUrl(`https://ezeapi-prod-copy.herokuapp.com/api/v1/sell-request/in-stock?sort=new&limit=20&page=1&minPrice=${search.min}&maxPrice=${search.max}&storageSizeString=&conditionString=&category=Smartphones&brand=Apple,Samsung,Google,Huawei,LG,Motorola,OnePlus.`)
+  },[url])
 
-  //  setProducts({...products, lowestAsk })price
+  const fuse = new Fuse(products,{
+    keys: ["name", "grade", "storageSize"],
+  });
 
-  //  products.filter((product)=> product.lowestAsk?.price == 0)
+  const searchProducts = (pattern) => {
+    console.log(pattern)
+    if (!pattern) {
+        setProductCopy(products)
+    }
+    const result = fuse.search(pattern);
+    const prorRes = result.map(products=>products.item)
+    if (result.length = 0 ) {
+        return(<div><span className="nos">No result for products...</span><span className="click">pls review categories to see products</span></div>)
+    } 
+    setProductCopy(prorRes)
+  }
 
-console.log("products filter log", products)
-}
-
-useEffect(()=>{
-  setloading(true);
-  axios.get(url)
-  .then((res)=> {
-    console.log("api log",res);
-    // localStorage.setItem("phones", JSON.stringify(res.data.data.data))
-    setProducts(res.data.data.data)
-    setloading(false);
-  }).catch(err => console.log("fetch error log", err));
-
-},[])
-
-useEffect(()=>{
-  setloading(true);
-  axios.get(url)
-  .then((res)=> {
-    console.log("api log",res);
-    // localStorage.setItem("phones", JSON.stringify(res.data.data.data))
-    setProducts(res.data.data.data)
-    setloading(false);
-  }).catch(err => console.log("fetch error log", err));
-
-},[url])
-
-// localStorage.setItem("phones", JSON.stringify(products));
 
   return (
     <div>
@@ -105,7 +88,7 @@ useEffect(()=>{
             <span class="sr-only"></span>
           </div>
         ):<Products 
-        products={products}
+        products={productCopy}
         />
       }
       
